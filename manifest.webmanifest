@@ -1,8 +1,8 @@
 {
-  "name": "WingTime",
-  "short_name": "WingTime",
+  "name": "test",
+  "short_name": "test",
   "start_url": "/",
-  "scope": "/",
+  "scope": "/test",
   "display": "standalone",
   "background_color": "#05080f",
   "theme_color": "#05080f",
