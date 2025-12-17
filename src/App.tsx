@@ -6,8 +6,6 @@ type View = 'menu' | 'elapsed'
 type TimeFields = {
   engineStart: string
   engineStop: string
-  takeoff: string
-  landing: string
 }
 
 type ActiveField = keyof TimeFields | null
@@ -97,8 +95,6 @@ function App() {
   const [times, setTimes] = useState<TimeFields>({
     engineStart: '',
     engineStop: '',
-    takeoff: '',
-    landing: '',
   })
   const [activeField, setActiveField] = useState<ActiveField>('engineStart')
   const [deferredPrompt, setDeferredPrompt] =
@@ -134,17 +130,11 @@ function App() {
     () => diffMinutes(times.engineStart, times.engineStop),
     [times.engineStart, times.engineStop],
   )
-  const flightElapsed = useMemo(
-    () => diffMinutes(times.takeoff, times.landing),
-    [times.takeoff, times.landing],
-  )
 
   const totalBlock = engineElapsed ?? null
-  const totalAir = flightElapsed ?? null
   const totalBlockTc = totalBlock !== null ? minutesToTcDecimal(totalBlock) : null
-  const totalAirTc = totalAir !== null ? minutesToTcDecimal(totalAir) : null
   const orderedFields: Array<keyof TimeFields> = useMemo(
-    () => ['engineStart', 'engineStop', 'takeoff', 'landing'],
+    () => ['engineStart', 'engineStop'],
     [],
   )
 
@@ -250,26 +240,11 @@ function App() {
             <p className="eyebrow">iOS Safari</p>
             <p>Add via Share ▸ Add to Home Screen for the full PWA experience.</p>
           </div>
-          <button type="button" className="icon-btn" onClick={() => setShowIosTip(false)}>
-            ×
-          </button>
-        </div>
-      )}
-
-      <header className="hero">
-        <div>
-          <p className="eyebrow">WingTime</p>
-          <h1>Fly ready. Fast inputs. Mobile PWA.</h1>
-          <p className="muted">
-            Designed for iPhone and Android browsers. Keep flight times and simple tools one tap away.
-          </p>
-        </div>
-        {deferredPrompt && !isAppInstalled && (
-          <button className="install-pill" onClick={() => setShowInstallSheet(true)}>
-            ⇩ Install PWA
-          </button>
-        )}
-      </header>
+      <button type="button" className="icon-btn" onClick={() => setShowIosTip(false)}>
+        ×
+      </button>
+    </div>
+  )}
 
       {view === 'menu' ? (
         <section className="menu">
@@ -301,8 +276,8 @@ function App() {
               ← Menu
             </button>
             <div>
-              <p className="eyebrow">Elapsed Time</p>
-              <h2>Block and air in two taps</h2>
+              <p className="eyebrow">Engine Time</p>
+              <h2>Start to shutdown in two taps</h2>
             </div>
           </div>
 
@@ -316,18 +291,6 @@ function App() {
               {renderField('Engine shutdown', 'engineStop')}
             </div>
             {renderElapsed('Engine time', totalBlock)}
-          </div>
-
-          <div className="panel">
-            <div className="panel-header">
-              <span className="pill subtle">Airborne</span>
-              <span className="mini-hint">HH:MM in 24h</span>
-            </div>
-            <div className="chips">
-              {renderField('Takeoff time', 'takeoff')}
-              {renderField('Landing time', 'landing')}
-            </div>
-            {renderElapsed('Flight time', totalAir)}
           </div>
 
           <div className="panel keypad-panel">
@@ -361,15 +324,11 @@ function App() {
               })}
             </div>
             <div className="elapsed-row total">
-              <span>Total flight tally</span>
+              <span>Total engine tally</span>
               <div className="totals">
                 <span>
                   Engine: {totalBlock !== null ? minutesToClock(totalBlock) : '--:--'} (
                   {totalBlockTc ?? '--.-'})
-                </span>
-                <span>
-                  Air: {totalAir !== null ? minutesToClock(totalAir) : '--:--'} (
-                  {totalAirTc ?? '--.-'})
                 </span>
               </div>
             </div>

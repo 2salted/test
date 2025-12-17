@@ -1,32 +1,11 @@
 .app-shell {
   min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   padding: 20px 18px 80px;
   max-width: 520px;
   margin: 0 auto;
   color: var(--text-primary);
-}
-
-.hero {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 18px 16px;
-  background: linear-gradient(135deg, rgba(107, 129, 255, 0.15), rgba(45, 227, 171, 0.08));
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 18px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(18px);
-}
-
-.hero h1 {
-  margin: 4px 0 10px;
-  font-size: 24px;
-  letter-spacing: -0.02em;
-}
-
-.hero p {
-  margin: 0;
 }
 
 .eyebrow {
@@ -42,7 +21,7 @@
 }
 
 .menu {
-  margin-top: 18px;
+  margin-top: 0;
 }
 
 .menu-grid {
@@ -102,18 +81,8 @@
   color: var(--text-muted);
 }
 
-.install-pill {
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text-primary);
-  border-radius: 999px;
-  padding: 10px 14px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
 .calculator {
-  margin-top: 18px;
+  margin-top: 0;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -345,7 +314,6 @@
   cursor: pointer;
 }
 
-.install-pill,
 .ghost,
 .primary,
 .key,
@@ -357,9 +325,5 @@
 @media (min-width: 600px) {
   .app-shell {
     padding: 28px 20px 100px;
-  }
-
-  .hero {
-    padding: 20px 18px;
   }
 }
