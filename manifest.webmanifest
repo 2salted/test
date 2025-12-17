@@ -1,8 +1,9 @@
 {
-  "name": "test",
+  "name": "test1",
   "short_name": "test",
-  "start_url": "/",
-  "scope": "/test",
+  "start_url": "/test/",
+  "id": "/test/",
+  "scope": "/test/",
   "display": "standalone",
   "background_color": "#05080f",
   "theme_color": "#05080f",
