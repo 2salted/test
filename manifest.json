@@ -1,13 +1,6 @@
 {
-  "name": "test1",
-  "short_name": "test",
-  "start_url": "/test/",
-  "id": "/test/",
-  "scope": "/test/",
-  "display": "standalone",
-  "background_color": "#05080f",
-  "theme_color": "#05080f",
-  "description": "Mobile-first flight time helper with quick keypad inputs.",
+  "name": "Your App Name",
+  "short_name": "App",
   "icons": [
     {
       "src": "icons/icon-48x48.png",
@@ -42,8 +35,7 @@
     {
       "src": "icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "icons/icon-256x256.png",
@@ -58,8 +50,11 @@
     {
       "src": "icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
-  ]
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000"
 }
