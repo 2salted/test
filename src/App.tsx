@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { PwaPrompt } from 'react-ios-pwa-prompt-ts'
 import './App.css'
 
 type View = 'menu' | 'elapsed'
@@ -57,10 +58,33 @@ const formatDigitsWithColon = (digits: string) => {
   return `${trimmed.slice(0, 2)}:${trimmed.slice(2)}`
 }
 
+const isTimeDigitsAllowed = (digits: string) => {
+  if (digits.length === 0) return true
+  const first = Number(digits[0])
+  if (Number.isNaN(first) || first > 2) return false
+
+  if (digits.length >= 2) {
+    const hours = Number(digits.slice(0, 2))
+    if (hours < 1 || hours > 24) return false
+  }
+
+  if (digits.length === 3) {
+    const minuteTens = Number(digits[2])
+    if (minuteTens > 5) return false
+  }
+
+  if (digits.length >= 4) {
+    const minutes = Number(digits.slice(2, 4))
+    if (minutes > 59) return false
+  }
+
+  return true
+}
+
 const toMinutes = (value: string) => {
   if (!/^\d{2}:\d{2}$/.test(value)) return null
   const [h, m] = value.split(':').map(Number)
-  if (Number.isNaN(h) || Number.isNaN(m) || h > 23 || m > 59) return null
+  if (Number.isNaN(h) || Number.isNaN(m) || h < 1 || h > 24 || m > 59) return null
   return h * 60 + m
 }
 
@@ -121,10 +145,12 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (isMobileUser() && isIosSafari()) {
+    if (!isAppInstalled && isMobileUser() && isIosSafari()) {
       setShowIosTip(true)
+    } else {
+      setShowIosTip(false)
     }
-  }, [])
+  }, [isAppInstalled])
 
   const engineElapsed = useMemo(
     () => diffMinutes(times.engineStart, times.engineStop),
@@ -144,6 +170,7 @@ function App() {
       const onlyDigits = prev[activeField].replace(/\D/g, '')
       if (onlyDigits.length >= 4) return prev
       const nextDigits = onlyDigits + digit
+      if (!isTimeDigitsAllowed(nextDigits)) return prev
       const nextValue = formatDigitsWithColon(nextDigits)
       if (nextDigits.length >= 4) {
         const currentIndex = orderedFields.indexOf(activeField)
@@ -234,17 +261,19 @@ function App() {
         </div>
       )}
 
-      {showIosTip && (
-        <div className="ios-tip">
-          <div>
-            <p className="eyebrow">iOS Safari</p>
-            <p>Add via Share ▸ Add to Home Screen for the full PWA experience.</p>
-          </div>
-      <button type="button" className="icon-btn" onClick={() => setShowIosTip(false)}>
-        ×
-      </button>
-    </div>
-  )}
+      {showIosTip && !isAppInstalled && (
+        <PwaPrompt
+          isOpen
+          copyTitle="Add WingTime to Home Screen"
+          copyBody="Install WingTime to launch offline and keep your times handy."
+          copyShareButtonLabel="1) Tap the Share button"
+          copyAddHomeButtonLabel="2) Choose 'Add to Home Screen'"
+          copyClosePrompt="Maybe later"
+          onClose={() => setShowIosTip(false)}
+          delay={0}
+          transitionDuration={400}
+        />
+      )}
 
       {view === 'menu' ? (
         <section className="menu">
@@ -277,7 +306,7 @@ function App() {
             </button>
             <div>
               <p className="eyebrow">Engine Time</p>
-              <h2>Start to shutdown in two taps</h2>
+              <h2>Calculate start to end times</h2>
             </div>
           </div>
 
@@ -287,8 +316,8 @@ function App() {
               <span className="mini-hint">Tap a field, use the keypad</span>
             </div>
             <div className="chips">
-              {renderField('Engine start', 'engineStart')}
-              {renderField('Engine shutdown', 'engineStop')}
+              {renderField('Start', 'engineStart')}
+              {renderField('End', 'engineStop')}
             </div>
             {renderElapsed('Engine time', totalBlock)}
           </div>
@@ -324,7 +353,7 @@ function App() {
               })}
             </div>
             <div className="elapsed-row total">
-              <span>Total engine tally</span>
+              <span>Total time</span>
               <div className="totals">
                 <span>
                   Engine: {totalBlock !== null ? minutesToClock(totalBlock) : '--:--'} (
